@@ -12,7 +12,7 @@ setup(
         "Operating System :: OS Independent",
         "Programming Language :: Python",
     ],
-    keywords='votes parliament'
+    keywords='votes parliament',
     author='CodeCamp',
     author_email='friedrich@pudo.org',
     url='',

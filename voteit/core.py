@@ -9,6 +9,7 @@ app.config.from_envvar('VOTEIT_SETTINGS', silent=True)
 
 db = None
 
+
 def url_for(*a, **kw):
     try:
         return _url_for(*a, _external=True, **kw)
