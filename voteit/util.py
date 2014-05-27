@@ -29,7 +29,7 @@ def hateoas_apply(obj):
         _type = obj.pop('@type')
         if _type == 'Motion':
             obj['api_url'] = url_for('motions_get',
-                                     object_id=obj.get('object_id'))
+                                     motion_id=obj.get('motion_id'))
         if _type == 'VoteEvent':
             obj['api_url'] = url_for('vote_events_get',
                                      identifier=obj.get('identifier'))

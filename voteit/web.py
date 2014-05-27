@@ -39,9 +39,9 @@ def motions_index():
     return jsonify(data)
 
 
-@app.route('/api/1/motions/<object_id>')
-def motions_get(object_id):
-    obj = motions.find_one({'object_id': object_id})
+@app.route('/api/1/motions/<motion_id>')
+def motions_get(motion_id):
+    obj = motions.find_one({'motion_id': motion_id})
     obj = obj_or_404(obj)
     return jsonify(obj)
 

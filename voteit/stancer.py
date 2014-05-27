@@ -9,12 +9,12 @@ function(obj, prev) {
     } else {
         prev.votes[obj.option]++;
     }
-    //prev.count++;
 };
 """)
 
 
 def generate_stances(blocs=[], filters={}):
-    data = votes.group(blocs, filters, {"votes": {}}, REDUCE)
+    keys = list(blocs) + ['motion.motion_id']
+    data = votes.group(keys, filters, {"votes": {}}, REDUCE)
     print data
     return data
