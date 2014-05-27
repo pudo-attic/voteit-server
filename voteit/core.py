@@ -11,7 +11,7 @@ app.config.from_object(default_settings)
 app.config.from_envvar('VOTEIT_SETTINGS', silent=True)
 
 mongo_uri = urlparse(app.config.get('MONGODB_URI'))
-conn = MongoClient(host=mongo_uri.hostname, port=mongo_uri.port)
+conn = MongoClient(app.config.get('MONGODB_URI'))
 db = conn[mongo_uri.path.replace('/', '')]
 
 motions = db['motions']
