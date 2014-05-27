@@ -1,1 +1,1 @@
-web: python voteit/manage.py runserver -p $PORT
+web: gunicorn voteit.manage:app
