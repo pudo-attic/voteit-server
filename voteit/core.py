@@ -18,6 +18,7 @@ motions = db['motions']
 vote_events = db['vote_events']
 vote_counts = db['vote_counts']
 votes = db['votes']
+issues = db['issues']
 
 
 def url_for(*a, **kw):
