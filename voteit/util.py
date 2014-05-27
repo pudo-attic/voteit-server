@@ -5,6 +5,8 @@ from bson.objectid import ObjectId
 from werkzeug.exceptions import NotFound
 from flask import Response, request
 
+from voteit.core import url_for
+
 
 class JSONEncoder(json.JSONEncoder):
     """ This encoder will serialize all entities that have a to_dict
@@ -22,8 +24,34 @@ class JSONEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 
+def hateoas_apply(obj):
+    if '@type' in obj:
+        _type = obj.pop('@type')
+        if _type == 'Motion':
+            obj['api_url'] = url_for('motions_get',
+                                     object_id=obj.get('object_id'))
+        if _type == 'VoteEvent':
+            obj['api_url'] = url_for('vote_events_get',
+                                     identifier=obj.get('identifier'))
+
+    return obj
+
+
+def hateoas_recurse(obj):
+    if isinstance(obj, dict):
+        for i, v in obj.items():
+            hateoas_recurse(v)
+        hateoas_apply(obj)
+    elif isinstance(obj, (list, tuple)):
+        for o in obj:
+            hateoas_recurse(o)
+
+
+
+
 def jsonify(obj, status=200, headers=None, index=False, encoder=JSONEncoder):
     """ Custom JSONificaton to support obj.to_dict protocol. """
+    hateoas_recurse(obj)
     if encoder is JSONEncoder:
         data = encoder(index=index).encode(obj)
     else:
