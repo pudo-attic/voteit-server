@@ -15,10 +15,6 @@ class JSONEncoder(json.JSONEncoder):
         super(JSONEncoder, self).__init__()
 
     def default(self, obj):
-        if self.index and hasattr(obj, 'to_dict_index'):
-            return obj.to_dict_index()
-        if hasattr(obj, 'to_dict'):
-            return obj.to_dict()
         if isinstance(obj, datetime):
             return obj.isoformat() + 'Z'
         if isinstance(obj, ObjectId):
