@@ -19,6 +19,7 @@ def api_index():
 @cross_origin(headers=['Content-Type'])
 def stances_get():
     blocs = request.args.getlist('bloc')
+    issues = request.args.getlist('issue')
     filters = {}
     for criterion in request.args.getlist('filter'):
         if not ':' in criterion:
@@ -28,9 +29,10 @@ def stances_get():
     data = {
         'request': {
             'blocs': blocs,
-            'filters': filters
+            'filters': filters,
+            'issues': issues
         },
-        'stances': generate_stances(blocs, filters)
+        'stances': generate_stances(blocs, issues, filters)
     }
     return jsonify(data)
 
