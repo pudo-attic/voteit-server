@@ -52,13 +52,19 @@ def generate_stances(blocs=[], issue_ids=[], filters={}):
     options = get_options(spec)
 
     data = {}
+    # Aggregate on the server.
     for cell in votes.group(keys, spec, {"votes": {}}, REDUCE):
+
+        # Aggregate by issue locally.
         for issue, mdata in motion_issues.get(cell.get('motion.motion_id')):
+
+            # Output cell key.
             key = repr([issue.get('_id')] + [cell.get(k) for k in keys])
             if not key in data:
                 data[key] = {
                     'issue': {'name': issue.get('name'), 'id': issue.get('_id')},
-                    'stance': defaultdict(int)
+                    'stance': defaultdict(int),
+                    'bloc': {}
                 }
             for option in options:
                 v = cell.get('votes').get(option, 0) * get_weight(mdata, option)
@@ -66,9 +72,6 @@ def generate_stances(blocs=[], issue_ids=[], filters={}):
             
             for k, v in cell.items():
                 if k in blocs:
-                    data[key][k] = v
-            
-
-    print data.values()
+                    data[key]['bloc'][k] = v
 
     return data.values()
