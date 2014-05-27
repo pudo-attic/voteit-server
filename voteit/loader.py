@@ -5,7 +5,7 @@ from voteit.core import vote_counts, votes
 
 
 def load_motions(motions_data):
-    
+
     for motion in motions_data:
         motion['@type'] = 'Motion'
         for e in motion['vote_events']:
@@ -31,6 +31,25 @@ def load_motions(motions_data):
                                    count, upsert=True)
 
             for vote in vote_event.get('votes'):
-                vote['vote_event_id'] = vote_event_id
-                votes.update({'vote_event_id': vote_event_id, 'voter_id': count.get('voter_id')},
-                             vote, upsert=True)
+                load_vote(vote, vote_event, motion)
+
+
+def load_vote(vote, vote_event, motion):
+    #pprint(vote)
+    vote['weight'] = 1
+    vote['event'] = vote_event.copy()
+    if 'motion' in vote['event']:
+        del vote['event']['motion']
+    if 'votes' in vote['event']:
+        del vote['event']['votes']
+
+    vote['motion'] = motion.copy()
+    if 'vote_events' in vote['motion']:
+        del vote['motion']['vote_events']
+
+    #pprint(vote)
+    votes.update({
+                 'event.identifier': vote_event.get('identifier'),
+                 'voter_id': vote.get('voter_id')},
+                 vote, upsert=True)
+    

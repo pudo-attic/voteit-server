@@ -47,8 +47,6 @@ def hateoas_recurse(obj):
             hateoas_recurse(o)
 
 
-
-
 def jsonify(obj, status=200, headers=None, index=False, encoder=JSONEncoder):
     """ Custom JSONificaton to support obj.to_dict protocol. """
     hateoas_recurse(obj)
