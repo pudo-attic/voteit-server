@@ -1,4 +1,4 @@
-from voteit.core import app, motions, vote_events
+from voteit.core import app, motions, vote_events, issues
 from voteit.util import jsonify, paginate_cursor, obj_or_404
 
 
@@ -34,3 +34,15 @@ def vote_events_get(identifier):
     obj = vote_events.find_one({'identifier': identifier})
     obj = obj_or_404(obj)
     return jsonify(obj)
+
+
+
+#------
+# Issues API
+#-------
+
+@app.route('/api/1/issues', methods=['GET'])
+def list_issues():
+    cur = issues.find()
+    data = paginate_cursor(cur)
+    return jsonify(data)
