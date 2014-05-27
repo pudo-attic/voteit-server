@@ -1,6 +1,8 @@
 import json
 from datetime import datetime
+from bson.objectid import ObjectId
 
+from werkzeug.exceptions import NotFound
 from flask import Response, request
 
 
@@ -19,6 +21,8 @@ class JSONEncoder(json.JSONEncoder):
             return obj.to_dict()
         if isinstance(obj, datetime):
             return obj.isoformat() + 'Z'
+        if isinstance(obj, ObjectId):
+            return unicode(obj)
         return json.JSONEncoder.default(self, obj)
 
 
@@ -34,3 +38,24 @@ def jsonify(obj, status=200, headers=None, index=False, encoder=JSONEncoder):
     return Response(data, headers=headers,
                     status=status,
                     mimetype='application/json')
+
+
+def paginate_cursor(cur):
+    # TODO validation:
+    limit = int(request.args.get('limit', '25'))
+    offset = int(request.args.get('offset', '0'))
+    data = {
+        'count': cur.count(),
+        'limit': limit,
+        'offset': offset
+    }
+    cur.limit(limit)
+    cur.skip(offset)
+    data['results'] = list(cur)
+    return data
+
+
+def obj_or_404(obj):
+    if obj is None:
+        raise NotFound()
+    return obj
