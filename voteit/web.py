@@ -1,5 +1,9 @@
+from flask import request, abort
+
 from voteit.core import app, motions, vote_events, issues
 from voteit.util import jsonify, paginate_cursor, obj_or_404
+
+from bson.objectid import ObjectId
 
 
 @app.route('/api/1')
@@ -46,3 +50,30 @@ def list_issues():
     cur = issues.find()
     data = paginate_cursor(cur)
     return jsonify(data)
+
+@app.route('/api/1/issues', methods=['POST'])
+def create_issue():
+    issue = request.json
+    if '_id' in issue:
+        del issue['_id']
+
+    issue_id = issues.insert(issue)
+    issue['_id'] = issue_id
+    return jsonify(issue, status=201)
+
+@app.route('/api/1/issues/<string:id>')
+def get_issue(id):
+    issue = issues.find_one({'_id': ObjectId(id)})
+    return jsonify(issue)
+
+@app.route('/api/1/issues/<string:id>', methods=['PUT'])
+def update_issue(id):
+    issue = request.json
+    issue['_id'] = ObjectId(id)
+    issues.save(issue)
+    return jsonify(issue)
+
+@app.route('/api/1/issues/<string:id>', methods=['DELETE'])
+def delete_issue(id):
+    issues.remove(ObjectId(id))
+    return '', 204
