@@ -1,4 +1,4 @@
-from flask import request, abort
+from flask import request
 from flask.ext.cors import cross_origin
 
 from voteit.core import app, motions, vote_events, issues
@@ -19,7 +19,7 @@ def api_index():
 @cross_origin(headers=['Content-Type'])
 def stances_get():
     blocs = request.args.getlist('bloc')
-    issues = request.args.getlist('issue')
+    issue_args = request.args.getlist('issue')
     filters = {}
     for criterion in request.args.getlist('filter'):
         if not ':' in criterion:
@@ -30,9 +30,9 @@ def stances_get():
         'request': {
             'blocs': blocs,
             'filters': filters,
-            'issues': issues
+            'issues': issue_args
         },
-        'stances': generate_stances(blocs, issues, filters)
+        'stances': generate_stances(blocs, issue_args, filters)
     }
     return jsonify(data)
 
@@ -69,7 +69,6 @@ def vote_events_get(identifier):
     return jsonify(obj)
 
 
-
 #------
 # Issues API
 #-------
@@ -80,6 +79,7 @@ def list_issues():
     cur = issues.find()
     data = paginate_cursor(cur)
     return jsonify(data)
+
 
 @app.route('/api/1/issues', methods=['POST'])
 @cross_origin(headers=['Content-Type'])
@@ -92,11 +92,13 @@ def create_issue():
     issue['_id'] = issue_id
     return jsonify(issue, status=201)
 
+
 @app.route('/api/1/issues/<string:id>')
 @cross_origin(headers=['Content-Type'])
 def get_issue(id):
     issue = issues.find_one({'_id': ObjectId(id)})
     return jsonify(issue)
+
 
 @app.route('/api/1/issues/<string:id>', methods=['PUT'])
 @cross_origin(headers=['Content-Type'])
@@ -105,6 +107,7 @@ def update_issue(id):
     issue['_id'] = ObjectId(id)
     issues.save(issue)
     return jsonify(issue)
+
 
 @app.route('/api/1/issues/<string:id>', methods=['DELETE'])
 @cross_origin(headers=['Content-Type'])
