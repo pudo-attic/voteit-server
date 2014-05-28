@@ -132,6 +132,13 @@ def create_issue():
     return jsonify(issue, status=201)
 
 
+@app.route('/api/1/issues/<string:id>', methods=['DELETE'])
+@cross_origin(headers=['Content-Type'])
+def delete_issue(id):
+    issues.remove(ObjectId(id))
+    return '', 204
+
+
 @app.route('/api/1/issues/<string:id>')
 @cross_origin(headers=['Content-Type'])
 def get_issue(id):
@@ -148,8 +155,3 @@ def update_issue(id):
     return jsonify(issue)
 
 
-@app.route('/api/1/issues/<string:id>', methods=['DELETE'])
-@cross_origin(headers=['Content-Type'])
-def delete_issue(id):
-    issues.remove(ObjectId(id))
-    return '', 204
