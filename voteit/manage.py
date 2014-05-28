@@ -2,6 +2,7 @@ import json
 
 from flask.ext.script import Manager
 
+from voteit.core import db
 from voteit.web import app
 from voteit.loader import load_motions
 
@@ -24,6 +25,15 @@ def loadfile(file_name):
         print "%s People" % len(people)
 
         load_motions(data.get('motions', []), dict(parties), dict(people))
+
+
+@manager.command
+def reset():
+    for coll in db.collection_names():
+        if coll in ['issues', 'system.indexes', 'system.users']:
+            continue
+        print coll
+        db.drop_collection(coll)
 
 
 def run():
