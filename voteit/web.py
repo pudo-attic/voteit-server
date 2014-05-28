@@ -40,7 +40,13 @@ def stances_get():
 @app.route('/api/1/motions')
 @cross_origin(headers=['Content-Type'])
 def motions_index():
-    cur = motions.find({}, {'vote_events.votes': False})
+    q = request.args.get('q', '').strip()
+    query = {}
+    if len(q):
+        regex = '.*%s.*' % q
+        query = {'$or': [{'text': {'$regex': regex}},
+                         {'title': {'$regex': regex}}]}
+    cur = motions.find(query, {'vote_events.votes': False})
     data = paginate_cursor(cur)
     return jsonify(data)
 
