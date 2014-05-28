@@ -36,7 +36,6 @@ def generate_stances(blocs=[], issue_ids=[], filters={}):
     _filt = {}
     if len(issue_ids):
         _filt = {'_id': {'$in': [ObjectId(i) for i in issue_ids]}}
-    
     issue_objs = list(issues.find(_filt))
 
     motion_issues = defaultdict(list)
@@ -64,7 +63,8 @@ def generate_stances(blocs=[], issue_ids=[], filters={}):
                 data[key] = {
                     'issue': {'name': issue.get('name'), 'id': issue.get('_id')},
                     'stance': defaultdict(int),
-                    'bloc': {}
+                    'bloc': {},
+                    'num_motions': 0
                 }
             for option in options:
                 v = cell.get('votes').get(option, 0) * get_weight(mdata, option)
@@ -73,5 +73,7 @@ def generate_stances(blocs=[], issue_ids=[], filters={}):
             for k, v in cell.items():
                 if k in blocs:
                     data[key]['bloc'][k] = v
+
+            data[key]['num_motions'] += 1
 
     return data.values()
