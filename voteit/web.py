@@ -133,7 +133,7 @@ def create_issue():
 
 
 @app.route('/api/1/issues/<string:id>', methods=['DELETE'])
-@cross_origin(headers=['Content-Type'])
+@cross_origin(headers=['Content-Type'], methods=['DELETE', 'PUT', 'GET'])
 def delete_issue(id):
     issues.remove(ObjectId(id))
     return '', 204
