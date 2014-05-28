@@ -18,6 +18,8 @@ motions = db['motions']
 vote_events = db['vote_events']
 vote_counts = db['vote_counts']
 votes = db['votes']
+#persons = db['persons']
+#parties = db['parties']
 issues = db['issues']
 
 

@@ -2,10 +2,27 @@ from pprint import pprint
 
 from voteit.core import motions, vote_events
 from voteit.core import vote_counts, votes
+from voteit.core import persons, parties
 
 
-def load_motions(motions_data, parties, people):
-    for motion in motions_data:
+# def load_people(data):
+#     for person in data.get('people', {}).values():
+#         print "PER Loading: %s" % person.get('name')
+#         person['@type'] = 'Person'
+#         persons.update({'id': person.get('id')}, person, upsert=True)
+
+
+# def load_parties(data):
+#     for party in data.get('parties', {}).values():
+#         print "PTY Loading: %s" % party.get('name')
+#         party['@type'] = 'Party'
+#         parties.update({'id': party.get('id')}, party, upsert=True)
+
+
+def load_motions(data):
+    for motion in data.get('motions', []):
+        print "Motion: %s" % motion.get('motion_id')
+
         motion['@type'] = 'Motion'
         for e in motion['vote_events']:
             e['@type'] = 'VoteEvent'
@@ -31,11 +48,10 @@ def load_motions(motions_data, parties, people):
                                    count, upsert=True)
 
             for vote in vote_event.get('votes'):
-                load_vote(vote, vote_event, motion, parties, people)
+                load_vote(vote, vote_event, motion, data)
 
 
-def load_vote(vote, vote_event, motion, parties, people):
-    #pprint(vote)
+def load_vote(vote, vote_event, motion, data):
     vote['weight'] = 1
     vote['event'] = vote_event.copy()
     if 'motion' in vote['event']:
@@ -47,10 +63,10 @@ def load_vote(vote, vote_event, motion, parties, people):
     if 'vote_events' in vote['motion']:
         del vote['motion']['vote_events']
 
-    vote['party'] = parties[vote['party_id']].copy()
+    vote['party'] = data['parties'][vote['party_id']].copy()
     del vote['party']['other_names']
 
-    vote['voter'] = people[vote['voter_id']].copy()
+    vote['voter'] = data['people'][vote['voter_id']].copy()
     #del vote['party']['other_names']
 
     #pprint(vote)
@@ -58,4 +74,3 @@ def load_vote(vote, vote_event, motion, parties, people):
                  'event.identifier': vote_event.get('identifier'),
                  'voter_id': vote.get('voter_id')},
                  vote, upsert=True)
-    
