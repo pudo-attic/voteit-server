@@ -5,18 +5,18 @@ from voteit.core import vote_counts, votes
 from voteit.core import persons, parties
 
 
-# def load_people(data):
-#     for person in data.get('people', {}).values():
-#         print "PER Loading: %s" % person.get('name')
-#         person['@type'] = 'Person'
-#         persons.update({'id': person.get('id')}, person, upsert=True)
+def load_people(data):
+    for person in data.get('people', {}).values():
+        print "PER Loading: %s" % person.get('name')
+        person['@type'] = 'Person'
+        persons.update({'id': person.get('id')}, person, upsert=True)
 
 
-# def load_parties(data):
-#     for party in data.get('parties', {}).values():
-#         print "PTY Loading: %s" % party.get('name')
-#         party['@type'] = 'Party'
-#         parties.update({'id': party.get('id')}, party, upsert=True)
+def load_parties(data):
+    for party in data.get('parties', {}).values():
+        print "PTY Loading: %s" % party.get('name')
+        party['@type'] = 'Party'
+        parties.update({'id': party.get('id')}, party, upsert=True)
 
 
 def load_motions(data):

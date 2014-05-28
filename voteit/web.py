@@ -2,6 +2,7 @@ from flask import request
 from flask.ext.cors import cross_origin
 
 from voteit.core import app, motions, vote_events, issues
+from voteit.core import parties, persons
 from voteit.util import jsonify, paginate_cursor, obj_or_404
 from voteit.stancer import generate_stances
 
@@ -71,6 +72,38 @@ def vote_events_index():
 @cross_origin(headers=['Content-Type'])
 def vote_events_get(identifier):
     obj = vote_events.find_one({'identifier': identifier})
+    obj = obj_or_404(obj)
+    return jsonify(obj)
+
+
+@app.route('/api/1/parties')
+@cross_origin(headers=['Content-Type'])
+def parties_index():
+    cur = parties.find({})
+    data = paginate_cursor(cur)
+    return jsonify(data)
+
+
+@app.route('/api/1/parties/<path:id>')
+@cross_origin(headers=['Content-Type'])
+def parties_get(id):
+    obj = parties.find_one({'id': id})
+    obj = obj_or_404(obj)
+    return jsonify(obj)
+
+
+@app.route('/api/1/persons')
+@cross_origin(headers=['Content-Type'])
+def persons_index():
+    cur = persons.find({})
+    data = paginate_cursor(cur)
+    return jsonify(data)
+
+
+@app.route('/api/1/persons/<path:id>')
+@cross_origin(headers=['Content-Type'])
+def persons_get(id):
+    obj = persons.find_one({'id': id})
     obj = obj_or_404(obj)
     return jsonify(obj)
 

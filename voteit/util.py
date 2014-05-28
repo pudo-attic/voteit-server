@@ -36,6 +36,11 @@ def hateoas_apply(obj):
         if _type == 'Issue':
             obj['api_url'] = url_for('get_issue',
                                      id=obj.get('id', obj.get('_id')))
+        if _type == 'Person':
+            obj['api_url'] = url_for('persons_get', id=obj.get('id'))
+
+        if _type == 'Party':
+            obj['api_url'] = url_for('parties_get', id=obj.get('id'))
 
     return obj
 
