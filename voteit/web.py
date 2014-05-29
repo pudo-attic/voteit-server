@@ -5,6 +5,7 @@ from voteit.core import app, motions, vote_events, issues
 from voteit.core import parties, persons
 from voteit.util import jsonify, paginate_cursor, obj_or_404
 from voteit.stancer import generate_stances
+from voteit.validation import validate_issue
 
 from bson.objectid import ObjectId
 
@@ -127,6 +128,8 @@ def create_issue():
     if '_id' in issue:
         del issue['_id']
 
+    validate_issue(issue)
+
     issue_id = issues.insert(issue)
     issue['_id'] = issue_id
     return jsonify(issue, status=201)
@@ -151,6 +154,9 @@ def get_issue(id):
 def update_issue(id):
     issue = request.json
     issue['_id'] = ObjectId(id)
+
+    validate_issue(issue)
+
     issues.save(issue)
     return jsonify(issue)
 
