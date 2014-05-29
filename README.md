@@ -2,6 +2,8 @@
 
 This is a server component for VoteIt, a Poplus component that manages parliamentary (or other) vote results. This prototype also includes a way to store issues, i.e., opinions of one group on a set of votes that can be aggregated into an overall assessment of a parliamentarian or party with that group.
 
+Read the [API documentation](http://docs.voteitapi.apiary.io/).
+
 ## Installation 
 
 Before installing ``voteit`` itself, make sure you have the following 
