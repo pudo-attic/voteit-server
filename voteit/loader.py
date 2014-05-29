@@ -63,8 +63,11 @@ def load_vote(vote, vote_event, motion, data):
     if 'vote_events' in vote['motion']:
         del vote['motion']['vote_events']
 
-    vote['party'] = data['parties'][vote['party_id']].copy()
-    del vote['party']['other_names']
+    if 'party_id' in vote and vote['party_id'] and \
+            vote['party_id'] in data['parties']:
+        vote['party'] = data['parties'][vote['party_id']].copy()
+        if 'other_names' in vote['party']:
+            del vote['party']['other_names']
 
     vote['voter'] = data['people'][vote['voter_id']].copy()
     #del vote['party']['other_names']
