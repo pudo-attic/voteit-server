@@ -42,8 +42,7 @@ def generate_stances(blocs=[], issue_ids=[], filters={}):
     motion_issues = defaultdict(list)
     for issue in issue_objs:
         for motion in issue.get('motions', []):
-            mid = motion.get('motion_id')
-            motion_issues[mid].append((issue, motion))
+            motion_issues[motion['motion_id']].append((issue, motion))
 
     spec = dict(filters)
     spec['motion.motion_id'] = {'$in': motion_issues.keys()}
@@ -59,7 +58,7 @@ def generate_stances(blocs=[], issue_ids=[], filters={}):
         for issue, mdata in motion_issues.get(cell.get('motion.motion_id')):
 
             # Output cell key.
-            key = repr([issue.get('_id')] + [cell.get(k) for k in keys])
+            key = repr([issue.get('_id')] + [cell.get(k) for k in set(blocs)])
             if not key in data:
                 data[key] = {
                     'issue': issue,
@@ -72,6 +71,7 @@ def generate_stances(blocs=[], issue_ids=[], filters={}):
                         'min_score': 0
                     }
                 }
+
             for option in options:
                 v = cell.get('votes').get(option, 0) * get_weight(mdata, option)
                 data[key]['stance'][option] += v
