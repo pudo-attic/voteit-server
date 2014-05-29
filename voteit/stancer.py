@@ -16,8 +16,8 @@ function(obj, prev) {
 """)
 
 
-def get_options(filters):
-    options = votes.find(filters).distinct('option')
+def get_options():
+    options = votes.find({}).distinct('option')
     return options
 
 
@@ -48,7 +48,7 @@ def generate_stances(blocs=[], issue_ids=[], filters={}):
     spec['motion.motion_id'] = {'$in': motion_issues.keys()}
     keys.add('motion.motion_id')
 
-    options = get_options(spec)
+    options = get_options()
 
     data = {}
     # Aggregate on the server.
@@ -84,8 +84,8 @@ def generate_stances(blocs=[], issue_ids=[], filters={}):
             data[key]['stats']['num_votes'] += cell['num_votes']
 
             weights = map(lambda x: get_weight(mdata, x), options)
-            data[key]['stats']['max_score'] += cell['num_votes'] * max(*weights)
-            data[key]['stats']['min_score'] += cell['num_votes'] * min(*weights)
+            data[key]['stats']['max_score'] += cell['num_votes'] * max(weights)
+            data[key]['stats']['min_score'] += cell['num_votes'] * min(weights)
 
     blocs = []
     for bloc in data.values():

@@ -28,13 +28,15 @@ def stances_get():
             continue
         field, value = criterion.split(':', 1)
         filters[field] = value
+    stances = generate_stances(blocs, issue_args, filters)
     data = {
         'request': {
             'blocs': blocs,
             'filters': filters,
             'issues': issue_args
         },
-        'stances': generate_stances(blocs, issue_args, filters)
+        'stances': stances,
+        'num_stances': len(stances)
     }
     return jsonify(data)
 

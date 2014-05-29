@@ -41,6 +41,9 @@ def deleteissues():
         'motions': [{
             'motion_id': 'motion-62-2012-1',
             'weights': {'yes': 23}
+        }, {
+            'motion_id': 'motion-62-2012-2',
+            'weights': {'yes': -23}
         }]
     })
 
