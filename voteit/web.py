@@ -5,7 +5,8 @@ from voteit.core import app, motions, vote_events, issues
 from voteit.core import parties, persons
 from voteit.util import jsonify, paginate_cursor, obj_or_404
 from voteit.stancer import generate_stances
-from voteit.validation import validate_issue
+
+import voteit.issues_api
 
 from bson.objectid import ObjectId
 
@@ -109,57 +110,3 @@ def persons_get(id):
     obj = persons.find_one({'id': id})
     obj = obj_or_404(obj)
     return jsonify(obj)
-
-
-#------
-# Issues API
-#-------
-
-@app.route('/api/1/issues', methods=['GET'])
-@cross_origin(headers=['Content-Type'])
-def list_issues():
-    cur = issues.find()
-    data = paginate_cursor(cur)
-    return jsonify(data)
-
-
-@app.route('/api/1/issues', methods=['POST'])
-@cross_origin(headers=['Content-Type'])
-def create_issue():
-    issue = request.json
-    if '_id' in issue:
-        del issue['_id']
-
-    validate_issue(issue)
-
-    issue_id = issues.insert(issue)
-    issue['_id'] = issue_id
-    return jsonify(issue, status=201)
-
-
-@app.route('/api/1/issues/<string:id>', methods=['DELETE'])
-@cross_origin(headers=['Content-Type'], methods=['DELETE', 'PUT', 'GET'])
-def delete_issue(id):
-    issues.remove(ObjectId(id))
-    return '', 204
-
-
-@app.route('/api/1/issues/<string:id>')
-@cross_origin(headers=['Content-Type'])
-def get_issue(id):
-    issue = issues.find_one({'_id': ObjectId(id)})
-    return jsonify(issue)
-
-
-@app.route('/api/1/issues/<string:id>', methods=['PUT'])
-@cross_origin(headers=['Content-Type'])
-def update_issue(id):
-    issue = request.json
-    issue['_id'] = ObjectId(id)
-
-    validate_issue(issue)
-
-    issues.save(issue)
-    return jsonify(issue)
-
-
