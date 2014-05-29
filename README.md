@@ -32,7 +32,7 @@ Once the new configuration is set up, you need to set an environemtn variable to
 
 Finally, you can run ``voteit-server``. 
 
-    python datawire/manage.py runserver 
+    python voteit/manage.py runserver 
 
 ## Bulk loader format
 
@@ -46,3 +46,8 @@ Both ``people`` and ``parties`` are given as a dictionary in themselves, with th
 
 The ``motions`` data is expected to be a list of fully nested VoteIt motion data, with a list of ``vote_events``, and ``votes`` within those. Each ``vote`` is expected to contain a ``option``, ``party_id`` and ``voter_id``. The latter two must resolve against the ``people`` and ``parties`` dictionaries specified in the root of the dictionary. 
 
+To import a bulk votes file, execute the following command from within the ``voteit-server`` virtualenv: 
+
+    python voteit/manage.py loaddata <file.json>
+
+ 
