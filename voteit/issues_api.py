@@ -119,4 +119,11 @@ def add_motions(issues):
         for m in issue.get('motions', []):
             # fold in the motion information
             motion = motions.find_one({'motion_id': m['motion_id']})
-            m['motion'] = motion or {'motion_id': m['motion_id']}
+            if motion:
+                # don't send back vote events, which is huge
+                if 'vote_events' in motion:
+                    del motion['vote_events']
+            else:
+                motion = {'motion_id': m['motion_id']}
+
+            m['motion'] = motion
