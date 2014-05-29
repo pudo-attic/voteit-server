@@ -54,3 +54,8 @@ env/*
 # Sphinx documentation
 docs/_build/
 
+contrib/bundestag/data/*
+contrib/bundestag/motions.json
+contrib/bundestag/people.json
+contrib/bundestag/persons.json
+
