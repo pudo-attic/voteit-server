@@ -30,6 +30,12 @@ def reset():
         db.drop_collection(coll)
 
 
+@manager.command
+def deleteissues():
+    db.drop_collection(db['issues'])
+
+
+
 def run():
     manager.run()
 
