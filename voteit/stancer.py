@@ -61,7 +61,7 @@ def generate_stances(blocs=[], issue_ids=[], filters={}):
             key = repr([issue.get('_id')] + [cell.get(k) for k in keys])
             if not key in data:
                 data[key] = {
-                    'issue': {'name': issue.get('name'), 'id': issue.get('_id')},
+                    'issue': issue,
                     'stance': defaultdict(int),
                     'bloc': {},
                     'num_motions': 0
