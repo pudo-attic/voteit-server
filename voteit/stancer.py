@@ -11,6 +11,7 @@ function(obj, prev) {
         prev.votes[obj.option] = 0;
     }
     prev.votes[obj.option] += obj.weight;
+    prev.num_votes += obj.weight;
 };
 """)
 
@@ -52,7 +53,7 @@ def generate_stances(blocs=[], issue_ids=[], filters={}):
 
     data = {}
     # Aggregate on the server.
-    for cell in votes.group(keys, spec, {"votes": {}}, REDUCE):
+    for cell in votes.group(keys, spec, {"votes": {}, 'num_votes': 0}, REDUCE):
 
         # Aggregate by issue locally.
         for issue, mdata in motion_issues.get(cell.get('motion.motion_id')):
@@ -64,7 +65,8 @@ def generate_stances(blocs=[], issue_ids=[], filters={}):
                     'issue': issue,
                     'stance': defaultdict(int),
                     'bloc': {},
-                    'num_motions': 0
+                    'num_motions': 0,
+                    'num_votes': 0
                 }
             for option in options:
                 v = cell.get('votes').get(option, 0) * get_weight(mdata, option)
@@ -75,5 +77,6 @@ def generate_stances(blocs=[], issue_ids=[], filters={}):
                     data[key]['bloc'][k] = v
 
             data[key]['num_motions'] += 1
+            data[key]['num_votes'] += cell['num_votes']
 
     return data.values()
