@@ -8,7 +8,7 @@ def validate_issue(issue):
     #     "phrase": "Issue phrase",
     #     "motions": [
     #         {
-    #             "motion": {"id": "abc123"},
+    #             "motion": {"motion_id": "abc123"},
     #             "weights": {"yes": 10}
     #         },
     #     ]
@@ -30,12 +30,13 @@ def validate_issue_motions(motions):
         #   id: "abc123",
         #   ...
         # }
-        if not 'motion' in m or not m['motion'].get('id'):
-            raise BadRequest('motion must have a "motion" object with a non-empty "id"')
-        motion_id = m['motion']['id']
+        if not 'motion' in m or not m['motion'].get('motion_id'):
+            raise BadRequest('motion must have a "motion" object with a non-empty "motion_id"')
+        motion_id = m['motion']['motion_id']
 
         # clean out everything except the id
-        m['motion'] = {"id": motion_id}
+        m['motion'] = {"motion_id": motion_id}
+        m['motion_id'] = motion_id
 
         # weights: {
         #   yes: 2,
