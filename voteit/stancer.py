@@ -25,9 +25,9 @@ def get_weight(mdata, option):
     weights = mdata.get('weights', {})
     weight = weights.get(option)
     if weight is None:
-        if option == 'yes' and weights['no'] is not None:
+        if option == 'yes' and weights.get('no') is not None:
             weight = -1 * weights['no']
-        if option == 'no' and weights['yes'] is not None:
+        elif option == 'no' and weights.get('yes') is not None:
             weight = -1 * weights['yes']
     return weight or 0
 
@@ -65,8 +65,12 @@ def generate_stances(blocs=[], issue_ids=[], filters={}):
                     'issue': issue,
                     'stance': defaultdict(int),
                     'bloc': {},
-                    'num_motions': 0,
-                    'num_votes': 0
+                    'stats': {
+                        'num_motions': 0,
+                        'num_votes': 0,
+                        'max_score': 0,
+                        'min_score': 0
+                    }
                 }
             for option in options:
                 v = cell.get('votes').get(option, 0) * get_weight(mdata, option)
@@ -76,7 +80,25 @@ def generate_stances(blocs=[], issue_ids=[], filters={}):
                 if k in blocs:
                     data[key]['bloc'][k] = v
 
-            data[key]['num_motions'] += 1
-            data[key]['num_votes'] += cell['num_votes']
+            data[key]['stats']['num_motions'] += 1
+            data[key]['stats']['num_votes'] += cell['num_votes']
 
-    return data.values()
+            weights = map(lambda x: get_weight(mdata, x), options)
+            data[key]['stats']['max_score'] += cell['num_votes'] * max(*weights)
+            data[key]['stats']['min_score'] += cell['num_votes'] * min(*weights)
+
+    blocs = []
+    for bloc in data.values():
+        # determine the full range of available values:
+        value_range = bloc['stats']['max_score'] - bloc['stats']['min_score']
+
+        # sum up 'yes' and 'no' values:
+        bloc_value = sum(bloc['stance'].values())
+
+        # make the bloc value fall in between 0 and value_range
+        normalized_value = bloc_value + (bloc['stats']['min_score'] * -1)
+
+        # calculate a score based on the normalized value and the value range
+        bloc['match'] = normalized_value / max(1, value_range)
+        blocs.append(bloc)
+    return blocs
