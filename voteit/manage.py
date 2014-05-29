@@ -2,7 +2,7 @@ import json
 
 from flask.ext.script import Manager
 
-from voteit.core import db
+from voteit.core import db, issues
 from voteit.web import app
 from voteit.loader import load_motions
 from voteit.loader import load_parties, load_people
@@ -32,7 +32,17 @@ def reset():
 
 @manager.command
 def deleteissues():
-    db.drop_collection(db['issues'])
+    db.drop_collection(issues)
+    #print db.issues.count()
+    #return
+    db.issues.insert({
+        'title': 'Finnish Misogynist Union Stance',
+        'phrase': 'making homophobia, xenophobia and supressed anger an art form',
+        'motions': [{
+            'motion_id': 'motion-62-2012-1',
+            'weights': {'yes': 23}
+        }]
+    })
 
 
 
