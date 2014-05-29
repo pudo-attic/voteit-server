@@ -62,7 +62,8 @@ def generate_stances(blocs=[], issue_ids=[], filters={}):
             if not key in data:
                 data[key] = {
                     'issue': issue,
-                    'stance': defaultdict(int),
+                    'counts': defaultdict(int),
+                    'weighted': defaultdict(int),
                     'bloc': {},
                     'stats': {
                         'num_motions': 0,
@@ -73,8 +74,9 @@ def generate_stances(blocs=[], issue_ids=[], filters={}):
                 }
 
             for option in options:
-                v = cell.get('votes').get(option, 0) * get_weight(mdata, option)
-                data[key]['stance'][option] += v
+                v = cell.get('votes').get(option, 0)
+                data[key]['counts'][option] += v
+                data[key]['weighted'][option] += v * get_weight(mdata, option)
             
             for k, v in cell.items():
                 if k in blocs:
@@ -93,7 +95,7 @@ def generate_stances(blocs=[], issue_ids=[], filters={}):
         value_range = bloc['stats']['max_score'] - bloc['stats']['min_score']
 
         # sum up 'yes' and 'no' values:
-        bloc_value = sum(bloc['stance'].values())
+        bloc_value = sum(bloc['weighted'].values())
 
         # make the bloc value fall in between 0 and value_range
         normalized_value = bloc_value + (bloc['stats']['min_score'] * -1)
