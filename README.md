@@ -50,6 +50,6 @@ The ``motions`` data is expected to be a list of fully nested VoteIt motion data
 
 To import a bulk votes file, execute the following command from within the ``voteit-server`` virtualenv: 
 
-    python voteit/manage.py loaddata <file.json>
+    python voteit/manage.py loadfile <file.json>
 
  
