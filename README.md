@@ -35,7 +35,7 @@ Finally, you can run ``voteit-server``.
 
 ## Bulk loader format
 
-VoteIt data, conforming to the relevant Popolo specfication, can be loaded in bulk from a single JSON file. The file is expected to contain a dictionary with the following keys:
+VoteIt data, conforming to the relevant [Popolo specfication](http://popoloproject.com/specs/vote-event.html), can be loaded in bulk from a single JSON file. The file is expected to contain a dictionary with the following keys:
 
 * ``motions`` - the actual motions, vote event and votes data.
 * ``people`` - PopIt person data for each person that has cast votes.
