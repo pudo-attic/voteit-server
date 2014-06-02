@@ -5,6 +5,7 @@ from voteit.core import app, motions, vote_events, issues
 from voteit.core import parties, persons
 from voteit.util import jsonify, paginate_cursor, obj_or_404
 from voteit.stancer import generate_stances
+from voteit.aggregate import generate_aggregate
 
 import voteit.issues_api
 
@@ -17,6 +18,28 @@ from bson.objectid import ObjectId
 def api_index():
     return jsonify({'status': 'ok'})
 
+
+@app.route('/api/1/aggregate')
+@cross_origin(headers=['Content-Type'])
+def aggregate_get():
+    blocs = request.args.getlist('bloc')
+    motion_args = request.args.getlist('motion')
+    filters = {}
+    for criterion in request.args.getlist('filter'):
+        if not ':' in criterion:
+            continue
+        field, value = criterion.split(':', 1)
+        filters[field] = value
+    aggregates = generate_aggregate(blocs, motion_args, filters)
+    data = {
+        'request': {
+            'blocs': blocs,
+            'filters': filters,
+            'motions': motion_args
+        },
+        'aggregate': aggregates
+    }
+    return jsonify(data)
 
 @app.route('/api/1/stances')
 @cross_origin(headers=['Content-Type'])

@@ -59,3 +59,5 @@ contrib/bundestag/motions.json
 contrib/bundestag/people.json
 contrib/bundestag/parties.json
 
+settings.py
+*.swp
