@@ -42,31 +42,28 @@ def generate_aggregate(blocs=[], issue_ids=[], filters={}):
     # Aggregate on the server.
     for cell in votes.group(keys, spec, {"votes": {}, 'num_votes': 0}, REDUCE):
 
-        # Aggregate by issue locally.
-        for issue, mdata in motion_issues.get(cell.get('motion.motion_id')):
-
-            # Output cell key.
-            key = repr([issue.get('_id')] + [cell.get(k) for k in set(blocs)])
-            if not key in data:
-                data[key] = {
-                    'issue': issue,
-                    'counts': defaultdict(int),
-                    'bloc': {},
-                    'stats': {
-                        'num_motions': 0,
-                        'num_votes': 0
-                    }
+        key = repr([cell.get(k) for k in set(blocs)])
+        if not key in data:
+            data[key] = {
+                'key': key,
+                'motions': motion_issues.keys(),
+                'counts': defaultdict(int),
+                'bloc': {},
+                'stats': {
+                    'num_motions': 0,
+                    'num_votes': 0
                 }
+            }
 
-            for option in options:
-                v = cell.get('votes').get(option, 0)
-                data[key]['counts'][option] += v
-            
-            for k, v in cell.items():
-                if k in blocs:
-                    data[key]['bloc'][k] = v
+        for option in options:
+            v = cell.get('votes').get(option, 0)
+            data[key]['counts'][option] += v
+        
+        for k, v in cell.items():
+            if k in blocs:
+                data[key]['bloc'][k] = v
 
-            data[key]['stats']['num_motions'] += 1
-            data[key]['stats']['num_votes'] += cell['num_votes']
+        data[key]['stats']['num_motions'] += 1
+        data[key]['stats']['num_votes'] += cell['num_votes']
 
     return data.values()
