@@ -52,4 +52,14 @@ To import a bulk votes file, execute the following command from within the ``vot
 
     python voteit/manage.py loadfile <file.json>
 
+## API Documentation
  
+* /api/1/motions
+* /api/1/motion/`<motion_id>`
+* /api/1/vote_events
+* /api/1/vote_events/`<vote_event_id>`
+* /api/1/parties
+* /api/1/parties/`<party_id>`
+* /api/1/persons
+* /api/1/persons/`<party_id>`
+
