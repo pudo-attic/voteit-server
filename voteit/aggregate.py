@@ -20,21 +20,13 @@ def get_options():
     options = votes.find({}).distinct('option')
     return options
 
-def generate_aggregate(blocs=[], issue_ids=[], filters={}):
+def generate_aggregate(blocs=[], motion_ids=[], filters={}):
     keys = set(blocs)
-    _filt = {}
-    if len(issue_ids):
-        _filt = {'_id': {'$in': [ObjectId(i) for i in issue_ids]}}
-    issue_objs = list(issues.find(_filt))
-
-    motion_issues = defaultdict(list)
-    for issue in issue_objs:
-        for motion in issue.get('motions', []):
-            motion_issues[motion['motion_id']].append((issue, motion))
 
     spec = dict(filters)
-    spec['motion.motion_id'] = {'$in': motion_issues.keys()}
-    keys.add('motion.motion_id')
+    if len(motion_ids):
+      spec['motion.motion_id'] = {'$in': motion_ids}
+      keys.add('motion.motion_id')
 
     options = get_options()
 
@@ -45,8 +37,7 @@ def generate_aggregate(blocs=[], issue_ids=[], filters={}):
         key = repr([cell.get(k) for k in set(blocs)])
         if not key in data:
             data[key] = {
-                'key': key,
-                'motions': motion_issues.keys(),
+                'motions': motion_ids,
                 'counts': defaultdict(int),
                 'bloc': {},
                 'stats': {
