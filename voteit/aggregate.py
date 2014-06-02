@@ -20,18 +20,6 @@ def get_options():
     options = votes.find({}).distinct('option')
     return options
 
-
-def get_weight(mdata, option):
-    weights = mdata.get('weights', {})
-    weight = weights.get(option)
-    if weight is None:
-        if option == 'yes' and weights.get('no') is not None:
-            weight = -1 * weights['no']
-        elif option == 'no' and weights.get('yes') is not None:
-            weight = -1 * weights['yes']
-    return weight or 0
-
-
 def generate_aggregate(blocs=[], issue_ids=[], filters={}):
     keys = set(blocs)
     _filt = {}
@@ -63,20 +51,16 @@ def generate_aggregate(blocs=[], issue_ids=[], filters={}):
                 data[key] = {
                     'issue': issue,
                     'counts': defaultdict(int),
-                    'weighted': defaultdict(int),
                     'bloc': {},
                     'stats': {
                         'num_motions': 0,
-                        'num_votes': 0,
-                        'max_score': 0,
-                        'min_score': 0
+                        'num_votes': 0
                     }
                 }
 
             for option in options:
                 v = cell.get('votes').get(option, 0)
                 data[key]['counts'][option] += v
-                data[key]['weighted'][option] += v * get_weight(mdata, option)
             
             for k, v in cell.items():
                 if k in blocs:
@@ -84,9 +68,5 @@ def generate_aggregate(blocs=[], issue_ids=[], filters={}):
 
             data[key]['stats']['num_motions'] += 1
             data[key]['stats']['num_votes'] += cell['num_votes']
-
-            weights = map(lambda x: get_weight(mdata, x), options)
-            data[key]['stats']['max_score'] += cell['num_votes'] * max(weights)
-            data[key]['stats']['min_score'] += cell['num_votes'] * min(weights)
 
     return data.values()
