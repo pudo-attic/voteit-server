@@ -1,18 +1,15 @@
 # VoteIt Server
 
-This is a server component for VoteIt, a Poplus component that manages parliamentary (or other) vote results. This prototype also includes a way to store issues, i.e., opinions of one group on a set of votes that can be aggregated into an overall assessment of a parliamentarian or party with that group.
-
-Read the [API documentation](http://docs.voteitapi.apiary.io/).
+This is a server component for a VoteIt API — part of a suite of tools for managing parliamentary (or other) vote results. 
 
 ## Installation 
 
-Before installing ``voteit`` itself, make sure you have the following 
-dependencies available on your system:
+Before installing, make sure you have the following dependencies available on your system:
 
 * MongoDB, ideally greater than 2.7.
 * Python 2.7 and [virtualenv](http://www.virtualenv.org/en/latest/)
 
-When you set up ``voteit``, first check out the application from GitHub,
+When you set up  ``voteit-server``, first check out the application from GitHub,
 create a virtual environment and install the Python dependencies:
 
     git clone https://github.com/pudo/voteit-server.git
