@@ -89,18 +89,4 @@ def generate_aggregate(blocs=[], issue_ids=[], filters={}):
             data[key]['stats']['max_score'] += cell['num_votes'] * max(weights)
             data[key]['stats']['min_score'] += cell['num_votes'] * min(weights)
 
-    blocs = []
-    for bloc in data.values():
-        # determine the full range of available values:
-        value_range = bloc['stats']['max_score'] - bloc['stats']['min_score']
-
-        # sum up 'yes' and 'no' values:
-        bloc_value = sum(bloc['weighted'].values())
-
-        # make the bloc value fall in between 0 and value_range
-        normalized_value = bloc_value + (bloc['stats']['min_score'] * -1)
-
-        # calculate a score based on the normalized value and the value range
-        bloc['match'] = normalized_value / max(1, value_range)
-        blocs.append(bloc)
-    return blocs
+    return data.values()
