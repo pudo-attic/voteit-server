@@ -28,7 +28,7 @@ the project.
 
 Next, you'll need to configure ``voteit-server``. Create a copy of the file ``voteit/default_settings.py``, as ``settings.py`` in the repository base. Open the file and set up the various account configurations. A particularly important setting is ``MONGODB_URI``, as it defines the database connection.
 
-Once the new configuration is set up, you need to set an environemtn variable to point ``voteit-server`` at the configuration file:
+Once the new configuration is set up, you need to set an environment variable to point ``voteit-server`` at the configuration file:
 
     export VOTEIT_SETTINGS=`pwd`/settings.py
 
