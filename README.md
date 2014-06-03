@@ -19,14 +19,10 @@ create a virtual environment and install the Python dependencies:
     pip install -r requirements.txt
     python setup.py develop
 
-If you're unfamiliar with virtualenv, be aware that you will need to 
-execute the ``source env/bin/activate`` command each time you're working with
-the project.
-
 Next, you need to start MongoDB. For testing, you can simply run
 
     mongod --dbpath=/tmp
-    
+
 You also need to configure ``voteit-server`` to point at this. Create a copy of the file ``voteit/default_settings.py``, as ``settings.py`` in the repository base, and change ``MONGODB_URI`` if required (the default should just work unless you've configured MongoDB differently).
 
 Once the new configuration is set up, you need to set an environment variable to point ``voteit-server`` at the configuration file:
@@ -36,8 +32,17 @@ Once the new configuration is set up, you need to set an environment variable to
 Finally, you can run ``voteit-server``. 
 
     python voteit/manage.py runserver 
-    
+
 Test that it's working by visiting the URL it tells you it's running on. 
+
+## Day-to-day Development
+
+When developing voteit-server day-to-day, you'll need to run
+
+    source env/bin/activate
+
+whenever you start a new shell. This tells Python to load the dependencies for
+voteit-server. It will place `(env)` at the start of your shell prompt.
 
 ## Bulk loader format
 
