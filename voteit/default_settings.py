@@ -1,4 +1,4 @@
 
 DEBUG = True
 
-MONGODB_URI = 'mongodb://localhost:27017/voteit'
+MONGODB_URI = 'mongodb://localhost/voteit'
