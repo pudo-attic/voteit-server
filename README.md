@@ -56,13 +56,23 @@ To import a bulk votes file, execute the following command from within the ``vot
     python voteit/manage.py loadfile <file.json>
 
 ## API Documentation
- 
-* /api/1/motions
-* /api/1/motion/`<motion_id>`
-* /api/1/vote_events
-* /api/1/vote_events/`<vote_event_id>`
-* /api/1/parties
-* /api/1/parties/`<party_id>`
-* /api/1/persons
-* /api/1/persons/`<party_id>`
 
+A read-only API exposes the following end-points:
+ 
+* GET /api/1/motions
+* GET /api/1/motion/`<motion_id>`
+* GET /api/1/vote_events
+* GET /api/1/vote_events/`<vote_event_id>`
+* GET /api/1/parties
+* GET /api/1/parties/`<party_id>`
+* GET /api/1/persons
+* GET /api/1/persons/`<party_id>`
+
+An `aggregrate` API end-point is also provided that allows grouping and filtering of vote information. For example:
+
+To see vote counts by party on a given motion:
+*  GET /api/1/aggregate?motion=62-2012-1&bloc=party.id
+  
+Or how a specific party voted on a range of motions:
+*  GET /api/1/aggregate?motion=62-2012-1&motion=62-2012-2&filter=party.id:13
+  
