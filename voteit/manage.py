@@ -33,8 +33,11 @@ def reset():
 @manager.command
 def deleteissues():
     db.drop_collection(issues)
-    #print db.issues.count()
-    #return
+
+
+# todo: guarantee that motions exist...
+@manager.command
+def addtestissue():
     db.issues.insert({
         'title': 'Finnish Misogynist Union Stance',
         'phrase': 'making homophobia, xenophobia and supressed anger an art form',
