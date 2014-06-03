@@ -17,9 +17,15 @@ def loadfile(file_name):
     with open(file_name, 'rb') as fh:
         data = json.load(fh)
         load_parties(data)
-        load_people(data)
+        load_people(data.get('people', {}).values())
         load_motions(data)
 
+@manager.command
+def loadpeople(file_name):
+    """ Load people from a JSON file. """
+    with open(file_name, 'rb') as fh:
+        data = json.load(fh)
+        load_people(data)
 
 @manager.command
 def reset():
@@ -29,10 +35,13 @@ def reset():
         print coll
         db.drop_collection(coll)
 
-
 @manager.command
 def deleteissues():
     db.drop_collection(issues)
+
+@manager.command
+def deletepeople():
+    db.drop_collection('persons')
 
 
 # todo: guarantee that motions exist...

@@ -5,8 +5,8 @@ from voteit.core import vote_counts, votes
 from voteit.core import persons, parties
 
 
-def load_people(data):
-    for person in data.get('people', {}).values():
+def load_people(people):
+    for person in people:
         print "PER Loading: %s" % person.get('name')
         person['@type'] = 'Person'
         persons.update({'id': person.get('id')}, person, upsert=True)
